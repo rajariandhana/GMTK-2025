@@ -12,21 +12,37 @@ var suits = ["♥️", "♣️", "♦️", "♠️"]
 
 var hand_limit : int = 4
 
-
 func _ready() -> void:
 	
-	for i in 18:
-		var card_instance : Card = card_path.instantiate()
-		card_instance.connect("selected", card_selected)
-		card_instance.suit = randi_range(0, 2)
-		card_instance.text = ""
-		card_instance.position.y += 40 + i
-		card_instance.position.x += 10
-		deck.add_child(card_instance)
+	generate_cards()
+	shuffle_card()
+	var i=0
+	for card in deck.get_children():
+		card.position.y += 40 + i
+		card.position.x += 10
+		i+=1
+		#print(card.get_info())
 	await updraw()
 	#for i in deck.get_children():
 		#trash_card(i)
 		#await get_tree().create_timer(0.03).timeout
+
+func generate_cards():
+	for suit in range (suits.size()):
+		for value in range(1,14):
+			#var card_instance: Card = Card.new(i, value)
+			var card_instance : Card = card_path.instantiate()
+			deck.add_child(card_instance)
+			card_instance.set_info(suit, value)
+			card_instance.connect("selected", card_selected)
+
+func shuffle_card():
+	var children = deck.get_children()
+	children.shuffle()
+	for child in children:
+		deck.remove_child(child)
+	for child in children:
+		deck.add_child(child)
 		
 func _physics_process(delta: float) -> void:
 	if state != State.IDLE:
