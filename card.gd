@@ -17,9 +17,9 @@ func _ready() -> void:
 	#print(has_node("Label"))
 	#print(label.text)
 
-func set_info(suit: int, value: int) -> void:
-	self.suit = suit
-	self.value = value
+func set_info(s: int, v: int) -> void:
+	self.suit = s
+	self.value = v
 	match value:
 		#0: rank.JOKER
 		1:

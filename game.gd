@@ -8,12 +8,18 @@ extends Control
 
 @onready var board_pos: Node2D = $BoardPositions
 @onready var hand_pos: Node2D = $HandPositions
-
+@onready var state_label: Label = $StatusLabel
 @onready var sfx_discard: AudioStreamPlayer2D = $SFX_Discard
 
 var selected_card : Card
-var state : int = State.IDLE
+var state: int = State.IDLE:
+	set(value):
+		state_machine(value)
+
+
+
 var suits = ["♥️", "♣️", "♦️", "♠️"]
+var current_loop = 1
 
 var card_vector2 = Vector2(-50, -75)
 
@@ -22,18 +28,17 @@ var hand_limit : int = 4
 var board_positions := []
 var hand_positions := []
 var trash_position := Vector2(982, 428)
+var deck_positions := Vector2(70, 70)
 
 
 func _ready() -> void:
-	
 	generate_cards()
-	shuffle_card()
+	shuffle_cards()
 	var i=0
 	for card in deck.get_children():
-		card.position.y += 70 + i
-		card.position.x += 70
-		i+=1
-		#print(card.get_info())
+		card.position = deck_positions + Vector2(0, i)
+		i -= 1
+	deck.get_children().reverse()
 		
 	board_positions=[]
 	for pos in board_pos.get_children():
@@ -47,15 +52,14 @@ func _ready() -> void:
 
 func generate_cards():
 	for suit in range (suits.size()):
-		for value in range(1,14):
-			#var card_instance: Card = Card.new(i, value)
+		for value in range(1, 14):
 			var card_instance : Card = card_path.instantiate()
 			deck.add_child(card_instance)
 			card_instance.set_info(suit, value)
 			card_instance.connect("selected", card_selected)
 
 
-func shuffle_card():
+func shuffle_cards():
 	var children = deck.get_children()
 	children.shuffle()
 	for child in children:
@@ -64,12 +68,28 @@ func shuffle_card():
 		deck.add_child(child)
 
 
-func _physics_process(delta: float) -> void:
+func state_machine(state):
+	if state == State.DEAD_END:
+		state_label.text = "DEAD END"
+		return
+	if state == State.LOOP_ENDED:
+		state_label.text = ""
+		current_loop += 1
+		await loop_deck()
+	if state == State.SHUFFLE_FINISHED:
+		await updraw()
+		
 	if state != State.IDLE:
 		return
+	
+	state_label.text = "LOOP " + str(current_loop)
 	if board.get_child_count() < 3 and deck.get_child_count() == 0:
 		discard_many(hand.get_children())
 		discard_many(board.get_children())
+		
+		await get_tree().create_timer(0.5).timeout
+		state = State.LOOP_ENDED
+		state_machine(state)
 		return
 		
 	if board.get_child(0).value == board.get_child(1).value and board.get_child(0).value == board.get_child(2).value:
@@ -84,7 +104,6 @@ func _physics_process(delta: float) -> void:
 				t.tween_property(card_from_deck, "position", get_viewport_rect().size / 2 + Vector2(-370, -100), 0.7)
 				await t.finished
 				break
-		print()
 		discard_many(board.get_children())
 		await updraw()
 		return
@@ -130,7 +149,7 @@ func updraw():
 			break
 		var t : Tween = create_tween()
 		tweens_to_check.append(t)
-		var card = deck.get_child(0)
+		var card = deck.get_child(-1)
 		card.text = suits[card.suit]
 		deck.remove_child(card)
 		board.add_child(card)
@@ -142,7 +161,7 @@ func updraw():
 			break
 		var t : Tween = create_tween()
 		tweens_to_check.append(t)
-		var card = deck.get_child(0)
+		var card = deck.get_child(-1)
 		card.text = suits[card.suit]
 		deck.remove_child(card)
 		hand.add_child(card)
@@ -151,10 +170,15 @@ func updraw():
 	
 	for t : Tween in tweens_to_check:
 		await t.finished
+	if is_dead_end():
+		state = State.DEAD_END
+		return
 	state = State.IDLE
 
 
 func card_selected(card: Card):
+	if not state == State.IDLE:
+		return
 	if card in deck.get_children():
 		return
 	if card in trash.get_children() and not card == trash.get_children()[-1]:
@@ -180,3 +204,42 @@ func card_selected(card: Card):
 	await t.finished
 	await t2.finished
 	state = State.IDLE
+
+
+func loop_deck():
+	state = State.SHUFFLING
+	var i=0
+	var tweens_to_check = []
+	for card in trash.get_children():
+		trash.remove_child(card)
+		deck.add_child(card)
+	shuffle_cards()
+	for card in deck.get_children():
+		var t : Tween = create_tween()
+		tweens_to_check.append(t)
+		t.tween_property(card, "position", deck_positions + Vector2(0, i), 0.4)
+		i -= 1
+		await get_tree().create_timer(0.03).timeout
+	deck.get_children().reverse()
+	for t : Tween in tweens_to_check:
+		if t.is_running():
+			await t.finished
+	
+	deck.get_children().reverse()
+	state = State.SHUFFLE_FINISHED
+
+
+func is_dead_end() -> bool:
+	if not board.get_children():
+		return false
+	var all_available_cards: Array = board.get_children() + hand.get_children()
+	if trash.get_child_count() > 0:
+		all_available_cards.append(trash.get_child(trash.get_child_count() - 1))
+		
+	var suit_counts := {}
+	for card in all_available_cards:
+		var suit = card.suit
+		suit_counts[suit] = suit_counts.get(suit, 0) + 1
+		if suit_counts[suit] >= 3:
+			return false
+	return true 

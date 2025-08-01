@@ -22,6 +22,7 @@ script = ExtResource("1_e2o6t")
 [node name="Hand" type="Node" parent="."]
 
 [node name="BG" type="Sprite2D" parent="."]
+z_index = -5
 position = Vector2(576, 324)
 texture = ExtResource("2_e2o6t")
 
@@ -58,3 +59,16 @@ position = Vector2(816, 503)
 
 [node name="SFX_Discard" type="AudioStreamPlayer2D" parent="."]
 stream = ExtResource("3_feb5d")
+
+[node name="StatusLabel" type="Label" parent="."]
+z_index = -1
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0, 0, 0, 0.168627)
+theme_override_font_sizes/font_size = 128
+text = "LOOP 1"
+horizontal_alignment = 2
