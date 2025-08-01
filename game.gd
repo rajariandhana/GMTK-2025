@@ -6,8 +6,8 @@ extends Control
 @onready var hand := $Hand
 @onready var card_path := preload("res://card.tscn")
 
-@onready var b_pos: Node2D = $BoardPositions
-@onready var h_pos: Node2D = $HandPositions
+@onready var board_pos: Node2D = $BoardPositions
+@onready var hand_pos: Node2D = $HandPositions
 
 @onready var sfx_discard: AudioStreamPlayer2D = $SFX_Discard
 
@@ -19,8 +19,9 @@ var card_vector2 = Vector2(-50, -75)
 
 var hand_limit : int = 4
 
-var board_positions=[]
-var hand_positions=[]
+var board_positions := []
+var hand_positions := []
+var trash_position := Vector2(982, 428)
 
 
 func _ready() -> void:
@@ -35,16 +36,14 @@ func _ready() -> void:
 		#print(card.get_info())
 		
 	board_positions=[]
-	for pos in b_pos.get_children():
+	for pos in board_pos.get_children():
 		board_positions.append(pos.global_position + card_vector2)
 	
 	hand_positions=[]
-	for pos in h_pos.get_children():
+	for pos in hand_pos.get_children():
 		hand_positions.append(pos.global_position + card_vector2)
 	await updraw()
-	#for i in deck.get_children():
-		#trash_card(i)
-		#await get_tree().create_timer(0.03).timeout
+
 
 func generate_cards():
 	for suit in range (suits.size()):
@@ -55,6 +54,7 @@ func generate_cards():
 			card_instance.set_info(suit, value)
 			card_instance.connect("selected", card_selected)
 
+
 func shuffle_card():
 	var children = deck.get_children()
 	children.shuffle()
@@ -62,31 +62,58 @@ func shuffle_card():
 		deck.remove_child(child)
 	for child in children:
 		deck.add_child(child)
-		
+
+
 func _physics_process(delta: float) -> void:
 	if state != State.IDLE:
 		return
 	if board.get_child_count() < 3 and deck.get_child_count() == 0:
-		for c in board.get_children():
-			discard(c)
-		for c in hand.get_children():
-			discard(c)
+		discard_many(hand.get_children())
+		discard_many(board.get_children())
+		return
+		
+	if board.get_child(0).value == board.get_child(1).value and board.get_child(0).value == board.get_child(2).value:
+		state = State.TWEENING
+		var card_from_deck : Card = null
+		for c in deck.get_children():
+			if c.value == board.get_child(0).value:
+				card_from_deck = c
+				deck.remove_child(card_from_deck)
+				board.add_child(card_from_deck)
+				var t : Tween = create_tween()
+				t.tween_property(card_from_deck, "position", get_viewport_rect().size / 2 + Vector2(-370, -100), 0.7)
+				await t.finished
+				break
+		print()
+		discard_many(board.get_children())
+		await updraw()
 		return
 		
 	if board.get_child(0).suit == board.get_child(1).suit and board.get_child(0).suit == board.get_child(2).suit:
 		state = State.TWEENING
-		for c in board.get_children():
-			discard(c)
+		discard_many(board.get_children())
 		await updraw()
 
 
-func discard(card : Card):
+func discard_many(cards: Array):
+	var sorted = []
+	for card in cards:
+		var dist = card.position.distance_to(trash_position)
+		sorted.append([dist, card])
+	sorted.sort()
+
+	for c in sorted:
+		var card = c[1]
+		discard_one(card)
+
+
+func discard_one(card: Card):
 	if selected_card == card:
 		selected_card = null
 	var t : Tween = card.create_tween()
 	card.get_parent().remove_child(card)
 	trash.add_child(card)
-	var target_position := Vector2(982, 428 - trash.get_child_count())
+	var target_position := Vector2(trash_position.x, trash_position.y - trash.get_child_count())
 	t.tween_property(card, "position", target_position, card.position.distance_to(target_position) * 0.001)
 	sfx_discard.play()
 
@@ -127,17 +154,17 @@ func updraw():
 	state = State.IDLE
 
 
-func card_selected(card:Card):
-	
+func card_selected(card: Card):
+	if card in deck.get_children():
+		return
+	if card in trash.get_children() and not card == trash.get_children()[-1]:
+		return
 	if not selected_card:
 		selected_card = card
 		return
 	if selected_card == card:
 		return
 	state = State.TWEENING
-	#if selected_card.get_parent() == card.get_parent():
-		#selected_card = card
-		#return
 	
 	var t : Tween = card.create_tween()
 	var t2 : Tween = card.create_tween()
@@ -153,4 +180,3 @@ func card_selected(card:Card):
 	await t.finished
 	await t2.finished
 	state = State.IDLE
-	print('d')

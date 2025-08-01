@@ -15,16 +15,20 @@ text = "♠️"
 script = ExtResource("1_kikvd")
 metadata/_custom_type_script = "uid://kkji060fqkls"
 
+[node name="SFX_Click" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("2_rjlel")
+volume_db = -10.0
+
 [node name="Label" type="Label" parent="."]
-layout_mode = 0
-offset_top = 57.0
-offset_right = 105.0
-offset_bottom = 80.0
+layout_mode = 1
+anchors_preset = -1
+anchor_top = 0.033
+anchor_right = 1.0
+anchor_bottom = 0.187
+offset_top = 0.0500002
+offset_bottom = -0.0500011
 text = "VALUE"
 horizontal_alignment = 1
 vertical_alignment = 1
-
-[node name="SFX_Click" type="AudioStreamPlayer" parent="."]
-stream = ExtResource("2_rjlel")
 
 [connection signal="button_up" from="." to="." method="_on_button_up"]
