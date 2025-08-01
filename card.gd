@@ -10,6 +10,7 @@ signal selected(card:Card)
 @export var suit : int = Suit.HEARTS
 
 @onready var label: Label = $Label
+@onready var sfx_click: AudioStreamPlayer = $"SFX_Click"
 
 func _ready() -> void:
 	pass
@@ -40,6 +41,7 @@ func set_info(suit: int, value: int) -> void:
 
 func _on_button_up() -> void:
 	selected.emit(self)
+	sfx_click.play()
 
 func get_value() -> String:
 	match value:

@@ -6,11 +6,22 @@ extends Control
 @onready var hand := $Hand
 @onready var card_path := preload("res://card.tscn")
 
+@onready var b_pos: Node2D = $BoardPositions
+@onready var h_pos: Node2D = $HandPositions
+
+@onready var sfx_discard: AudioStreamPlayer2D = $SFX_Discard
+
 var selected_card : Card
 var state : int = State.IDLE
 var suits = ["♥️", "♣️", "♦️", "♠️"]
 
+var card_vector2 = Vector2(-50, -75)
+
 var hand_limit : int = 4
+
+var board_positions=[]
+var hand_positions=[]
+
 
 func _ready() -> void:
 	
@@ -18,10 +29,18 @@ func _ready() -> void:
 	shuffle_card()
 	var i=0
 	for card in deck.get_children():
-		card.position.y += 40 + i
-		card.position.x += 10
+		card.position.y += 70 + i
+		card.position.x += 70
 		i+=1
 		#print(card.get_info())
+		
+	board_positions=[]
+	for pos in b_pos.get_children():
+		board_positions.append(pos.global_position + card_vector2)
+	
+	hand_positions=[]
+	for pos in h_pos.get_children():
+		hand_positions.append(pos.global_position + card_vector2)
 	await updraw()
 	#for i in deck.get_children():
 		#trash_card(i)
@@ -67,31 +86,15 @@ func discard(card : Card):
 	var t : Tween = card.create_tween()
 	card.get_parent().remove_child(card)
 	trash.add_child(card)
-	var target_position := Vector2(1000, 450 - trash.get_child_count())
+	var target_position := Vector2(982, 428 - trash.get_child_count())
 	t.tween_property(card, "position", target_position, card.position.distance_to(target_position) * 0.001)
+	sfx_discard.play()
 
 
 func updraw():
 	state = State.TWEENING
 	var hand_len := hand.get_child_count()
 	var board_len := board.get_child_count()
-	
-	var board_positions := [
-		get_viewport_rect().size / 2 + Vector2(+80, -100),
-		get_viewport_rect().size / 2 + Vector2(-70, -100),
-		get_viewport_rect().size / 2 + Vector2(-220, -100),
-	]
-	
-	var hand_positions := [
-		get_viewport_rect().size / 2 + Vector2(+120, +200),
-		get_viewport_rect().size / 2 + Vector2(0, +200),
-		get_viewport_rect().size / 2 + Vector2(-120, +200),
-		get_viewport_rect().size / 2 + Vector2(-240, +200),
-		get_viewport_rect().size / 2 + Vector2(-360, +200),
-		get_viewport_rect().size / 2 + Vector2(-480, +200),
-		get_viewport_rect().size / 2 + Vector2(-600, +200),
-		get_viewport_rect().size / 2 + Vector2(-720, +200),
-	]
 	
 	var tweens_to_check = []
 	
