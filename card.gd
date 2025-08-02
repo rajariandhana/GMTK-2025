@@ -9,8 +9,20 @@ signal selected(card:Card)
 @export var rank : int = Rank.NUMBER
 @export var suit : int = Suit.HEARTS
 
-@onready var label: Label = $Label
+@onready var label_tl: Label = $Label_TL
+@onready var label_br: Label = $Label_BR
+@onready var suit_icon: Sprite2D = $SuitIcon
+
+var suits = ["♥️", "♣️", "♦️", "♠️"]
+
 @onready var sfx_click: AudioStreamPlayer = $"SFX_Click"
+
+var suit_icons := {
+	Suit.HEARTS: preload("res://Suit_Heart.png"),
+	Suit.CLUBS: preload("res://Suit_Club.png"),
+	Suit.DIAMONDS: preload("res://Suit_Diamond.png"),
+	Suit.SPADES: preload("res://Suit_Spade.png"),
+}
 
 func _ready() -> void:
 	pass
@@ -24,20 +36,33 @@ func set_info(s: int, v: int) -> void:
 		#0: rank.JOKER
 		1:
 			rank = Rank.ACE
-			label.text = "ACE"
+			label_tl.text = "A"
+			label_br.text = "A"
 		11:
 			rank = Rank.JACK
-			label.text = "JACK"
+			label_tl.text = "J"
+			label_br.text = "J"
 		12:
 			rank = Rank.QUEEN
-			label.text = "QUEEN"
+			label_tl.text = "Q"
+			label_br.text = "Q"
 		13:
 			rank = Rank.KING
-			label.text = "KING"
+			label_tl.text = "K"
+			label_br.text = "K"
 		_:
 			rank = Rank.NUMBER
-			label.text = str(value)
+			label_tl.text = str(value)
+			label_br.text = str(value)
 	#print(get_info())
+	suit_icon.texture = suit_icons[suit]
+	if self.suit == Suit.SPADES || self.suit == Suit.CLUBS:
+		label_tl.add_theme_color_override("font_color", Color("#1E2749"))
+		label_br.add_theme_color_override("font_color", Color("#1E2749"))
+	elif self.suit == Suit.HEARTS || self.suit == Suit.DIAMONDS:
+		label_tl.add_theme_color_override("font_color", Color("#600724"))
+		label_br.add_theme_color_override("font_color", Color("#600724"))
+
 
 func _on_button_up() -> void:
 	selected.emit(self)
