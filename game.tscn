@@ -1,9 +1,10 @@
-[gd_scene load_steps=5 format=3 uid="uid://c3wmjn72rvyyc"]
+[gd_scene load_steps=6 format=3 uid="uid://c3wmjn72rvyyc"]
 
 [ext_resource type="Script" uid="uid://bgb67r0nnh5aj" path="res://game.gd" id="1_e2o6t"]
 [ext_resource type="Texture2D" uid="uid://ccvy1pl5c8bhq" path="res://Table.png" id="3_fc0e3"]
-[ext_resource type="AudioStream" uid="uid://c2sq6g123hrbe" path="res://sfx/success-1.mp3" id="3_feb5d"]
 [ext_resource type="Script" uid="uid://2tdj1201ufmi" path="res://combo.gd" id="4_fc0e3"]
+[ext_resource type="AudioStream" uid="uid://bci7wo8cwrtvx" path="res://sfx/discarded.mp3" id="4_ryrav"]
+[ext_resource type="AudioStream" uid="uid://cnlur4wlpridl" path="res://sfx/shuffle-cards.mp3" id="6_ryrav"]
 
 [node name="Game" type="Control"]
 layout_mode = 3
@@ -46,30 +47,30 @@ position = Vector2(1032, 503)
 [node name="BoardPositions" type="Node2D" parent="."]
 
 [node name="Board-1" type="Node2D" parent="BoardPositions"]
-position = Vector2(736, 276)
+position = Vector2(734, 276)
 
 [node name="Board-2" type="Node2D" parent="BoardPositions"]
-position = Vector2(576, 276)
+position = Vector2(574, 276)
 
 [node name="Board-3" type="Node2D" parent="BoardPositions"]
-position = Vector2(416, 276)
+position = Vector2(414, 276)
 
 [node name="HandPositions" type="Node2D" parent="."]
 
 [node name="Hand-1" type="Node2D" parent="HandPositions"]
-position = Vector2(336, 503)
+position = Vector2(334, 503)
 
 [node name="Hand-2" type="Node2D" parent="HandPositions"]
-position = Vector2(496, 503)
+position = Vector2(494, 503)
 
 [node name="Hand-3" type="Node2D" parent="HandPositions"]
-position = Vector2(656, 503)
+position = Vector2(654, 503)
 
 [node name="Hand-4" type="Node2D" parent="HandPositions"]
-position = Vector2(816, 503)
+position = Vector2(814, 503)
 
 [node name="SFX_Discard" type="AudioStreamPlayer2D" parent="."]
-stream = ExtResource("3_feb5d")
+stream = ExtResource("4_ryrav")
 
 [node name="StatusLabel" type="Label" parent="."]
 z_index = -1
@@ -81,5 +82,28 @@ grow_horizontal = 2
 grow_vertical = 2
 theme_override_colors/font_color = Color(0, 0, 0, 0.168627)
 theme_override_font_sizes/font_size = 128
-text = "LOOP 1"
+text = "LOOP 0"
 horizontal_alignment = 2
+
+[node name="DeadEndLabel" type="Label" parent="."]
+visible = false
+z_index = 1
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0, 0, 0, 0.168627)
+theme_override_font_sizes/font_size = 196
+text = "DEAD END"
+horizontal_alignment = 2
+vertical_alignment = 1
+
+[node name="Discarded" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("4_ryrav")
+volume_db = -5.0
+
+[node name="DeckLooped" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("6_ryrav")
+volume_db = -5.0
