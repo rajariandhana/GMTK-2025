@@ -1,11 +1,11 @@
 [gd_scene load_steps=7 format=3 uid="uid://c3mpu4ff7bw61"]
 
 [ext_resource type="Script" uid="uid://kkji060fqkls" path="res://card.gd" id="1_kikvd"]
-[ext_resource type="Texture2D" uid="uid://ch075eb5a5qf2" path="res://CardBack.png" id="2_1i5pp"]
+[ext_resource type="Texture2D" uid="uid://brjxej0xhqna" path="res://CardBack.png" id="2_1i5pp"]
 [ext_resource type="Texture2D" uid="uid://c3s5uyunhf51h" path="res://CardBase.png" id="2_q5obu"]
-[ext_resource type="AudioStream" uid="uid://dg5rguxd4vlmf" path="res://sfx/click-1.mp3" id="2_rjlel"]
 [ext_resource type="FontFile" uid="uid://xjcsbs3j5fpo" path="res://fonts/PixelOperator8-Bold.ttf" id="4_1i5pp"]
 [ext_resource type="Texture2D" uid="uid://dtc74taq8f8ww" path="res://Suit_Heart.png" id="5_fpac0"]
+[ext_resource type="AudioStream" uid="uid://cstoqmf0fi80y" path="res://sfx/card_click.mp3" id="6_1i5pp"]
 
 [node name="Card" type="Button"]
 anchors_preset = -1
@@ -61,7 +61,7 @@ z_index = 1
 texture = ExtResource("2_1i5pp")
 
 [node name="SFX_Click" type="AudioStreamPlayer" parent="."]
-stream = ExtResource("2_rjlel")
-volume_db = -10.0
+stream = ExtResource("6_1i5pp")
+volume_db = -5.0
 
 [connection signal="button_up" from="." to="." method="_on_button_up"]
