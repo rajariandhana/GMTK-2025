@@ -1,7 +1,6 @@
 # GMTK-2025
 
 ### bug list:
-unfair first shuffle, make sure first shuffle does not go to dead end
 
 ### ideas:
 combos:
