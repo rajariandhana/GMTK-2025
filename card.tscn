@@ -16,6 +16,7 @@ anchor_bottom = 0.231
 offset_right = 0.167992
 offset_bottom = 0.311996
 grow_vertical = 2
+mouse_filter = 1
 theme_override_font_sizes/font_size = 64
 theme_override_styles/normal = SubResource("StyleBoxEmpty_1i5pp")
 text = "♠️

@@ -87,7 +87,6 @@ func state_machine(state):
 		
 	state_label.text = "LOOP " + str(current_loop)
 	if board.get_child_count() < 3 and deck.get_child_count() == 0:
-		print('yay')
 		discard_many(hand.get_children())
 		discard_many(board.get_children())
 		
