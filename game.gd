@@ -53,21 +53,23 @@ func generate_cards():
 				for value in range(2, 11):
 					tweens_to_check.append(await add_card(suit, value))
 		1:
-			for value in range(2, 11):
-					tweens_to_check.append(await add_card(3, value))
+			tweens_to_check.append(await add_card(1, -999))
 		2:
 			for value in range(2, 11):
-					tweens_to_check.append(await add_card(4, value))
+					tweens_to_check.append(await add_card(3, value))
 		3:
-			for suit in range(1, 4):
-				tweens_to_check.append(await add_card(suit, 11))
+			for value in range(2, 11):
+					tweens_to_check.append(await add_card(4, value))
 		4:
 			for suit in range(1, 4):
-				tweens_to_check.append(await add_card(suit, 12))
+				tweens_to_check.append(await add_card(suit, 11))
 		5:
 			for suit in range(1, 4):
-				tweens_to_check.append(await add_card(suit, 13))
+				tweens_to_check.append(await add_card(suit, 12))
 		6:
+			for suit in range(1, 4):
+				tweens_to_check.append(await add_card(suit, 13))
+		7:
 			for suit in range(1, 4):
 				tweens_to_check.append(await add_card(suit, 14))
 	for t : Tween in tweens_to_check:
@@ -228,6 +230,8 @@ func card_selected(card: Card):
 		return
 	if card in deck.get_children():
 		return
+	if card in trash.get_children() and card.value == -999:
+		return
 	if card in trash.get_children() and not card == trash.get_children()[-1]:
 		return
 	if not selected_card:
@@ -235,6 +239,9 @@ func card_selected(card: Card):
 		return
 	if selected_card == card:
 		return
+	if selected_card.get_parent() != card.get_parent():
+		if card.value == -999 or selected_card.value == -999:
+			return
 	state = State.TWEENING
 	
 	var t : Tween = card.create_tween()
@@ -282,19 +289,34 @@ func loop_deck():
 
 
 func is_dead_end(all_available_cards: Array = []) -> bool:
-	if not all_available_cards:
+	if all_available_cards:
+		for card in all_available_cards:
+			if card.value == -999:
+				return true
+	else:
 		if board.get_child_count() < 3:
 			return false
-		all_available_cards = board.get_children() + hand.get_children()
+		all_available_cards = board.get_children()
+		for card in hand.get_children():
+			if card.value != -999:
+				all_available_cards.append(card)
 		if trash.get_child_count() > 0:
-			all_available_cards.append(trash.get_child(trash.get_child_count() - 1))
+			if trash.get_child(-1).value != -999:
+				all_available_cards.append(trash.get_child(-1))
 	
-	if len(all_available_cards) < 6:
-		return false
 	var suit_counts := {}
-	for card in all_available_cards:
+	var boss_card = null
+	var dead_end = true
+	for card: Card in all_available_cards:
 		var suit = card.suit
+		if card.value == -999:
+			boss_card = card
 		suit_counts[suit] = suit_counts.get(suit, 0) + 1
 		if suit_counts[suit] >= 3:
-			return false
-	return true 
+			dead_end = false
+	if boss_card:
+		if suit_counts[boss_card.suit] >= 3:
+			dead_end = false
+		else:
+			dead_end = true
+	return dead_end 
