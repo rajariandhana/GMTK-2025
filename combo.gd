@@ -1,6 +1,23 @@
 extends Node
 
 @onready var combo_label: Label = $ComboLabel
+	
+func get_infos(cards: Array) -> String:
+	var res=""
+	for card in cards:
+		res+= card.get_info()+", "
+	return res
+	
+func clean(cards: Array) -> Array:
+	var cleans = []
+	var jokers_ctr=0
+	for card in cards:
+		if card.rank == Rank.JOKER:
+			jokers_ctr+=1
+		else:
+			cleans.append(card)
+	#print("jokers: "+str(jokers_ctr)+" | "+get_infos(cleans))
+	return cleans
 
 func same_suit(cards: Array) -> bool:
 	for i in range(cards.size()-1):
@@ -10,34 +27,25 @@ func same_suit(cards: Array) -> bool:
 
 # @requires cards must be 3 of same suit since will only be called when discarding 3
 func combo_detector(cards: Array):
-	#print("detecting")
-	if (royals(cards)):
+	if (combo_royals(cards)):
 		combo_label.text = "Combo: ROYALS!"
-	elif (numbers(cards) && straight(cards)):
+	elif (combo_straight(cards)):
 		combo_label.text = "Combo: STRAIGHT!"
 	await get_tree().create_timer(2.0).timeout
 	combo_label.text = "Combo:"
 
-func royals(cards: Array) -> bool:
+func combo_royals(cards: Array) -> bool:
+	#print("size: "+str(cards.size()))
+	#return true
 	for card in cards:
-		if !royal(card):
+		if card.rank == Rank.JOKER:
+			pass
+		elif Rank.TWO <= card.rank && card.rank <= Rank.TEN:
 			return false
 	print("royals")
 	return true
-	
-func royal(card: Card) -> bool:
-	if card.rank == Rank.JACK || card.rank == Rank.QUEEN || card.rank == Rank.KING:
-		return true
-	return false
 
-func numbers(cards: Array) -> bool:
-	for card in cards:
-		if card.rank != Rank.NUMBER:
-			return false
-	print("numbers")
-	return true
-
-func straight(cards: Array) -> bool:
+func combo_straight(cards: Array) -> bool:
 	var temp = cards
 	temp.sort_custom(func(a: Card, b: Card) -> bool:
 		return a.value < b.value

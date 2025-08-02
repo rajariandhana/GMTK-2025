@@ -17,9 +17,7 @@ var state: int = State.IDLE:
 	set(value):
 		state_machine(value)
 
-
-
-var suits = ["♥️", "♣️", "♦️", "♠️"]
+var suits = ["","♠️","♥️","♣️","♦️"]
 var current_loop = 1
 
 var card_vector2 = Vector2(-50, -75)
@@ -37,6 +35,7 @@ func _ready() -> void:
 	shuffle_cards()
 	var i=0
 	for card in deck.get_children():
+		#print(card.get_info())
 		card.position = deck_positions + Vector2(0, i)
 		i -= 1
 	deck.get_children().reverse()
@@ -50,14 +49,28 @@ func _ready() -> void:
 		hand_positions.append(pos.global_position + card_vector2)
 	await updraw()
 
-
 func generate_cards():
-	for suit in range (suits.size()):
-		for value in range(1, 14):
+	var joker_black: Card = card_path.instantiate()
+	deck.add_child(joker_black)
+	joker_black.set_info(Suit.NONE, Rank.JOKER)
+	joker_black.connect("selected", card_selected)
+	joker_black.label_tl.add_theme_color_override("font_color", Color("#1E2749"))
+	joker_black.label_br.add_theme_color_override("font_color", Color("#1E2749"))
+	
+	var joker_red: Card = card_path.instantiate()
+	deck.add_child(joker_red)
+	joker_red.set_info(Suit.NONE, Rank.JOKER)
+	joker_red.connect("selected", card_selected)
+	joker_red.label_tl.add_theme_color_override("font_color", Color("#600724"))
+	joker_red.label_br.add_theme_color_override("font_color", Color("#600724"))
+	
+	for suit in range (1, suits.size()):
+		for rank in range(2, 15):
 			var card_instance : Card = card_path.instantiate()
 			deck.add_child(card_instance)
-			card_instance.set_info(suit, value)
+			card_instance.set_info(suit, rank)
 			card_instance.connect("selected", card_selected)
+	print(str(deck.get_children().size()) + " cards in deck")
 
 
 func shuffle_cards():
@@ -95,6 +108,7 @@ func state_machine(state):
 		return
 		
 	if board.get_child(0).value == board.get_child(1).value and board.get_child(0).value == board.get_child(2).value:
+		print("test-1")
 		state = State.TWEENING
 		var card_from_deck : Card = null
 		for c in deck.get_children():
@@ -110,10 +124,12 @@ func state_machine(state):
 		await updraw()
 		return
 		
-	if combo.same_suit(board.get_children()):
-		combo.combo_detector(board.get_children())
+	var board_cards = board.get_children()
+	var cleans = combo.clean(board_cards)
+	if combo.same_suit(cleans):
+		combo.combo_detector(cleans)
 		state = State.TWEENING
-		discard_many(board.get_children())
+		discard_many(board_cards)
 		await updraw()
 		
 
