@@ -2,4 +2,8 @@ class_name State
 enum {
 	IDLE,
 	TWEENING,
+	DEAD_END,
+	LOOP_ENDED,
+	SHUFFLE_FINISHED,
+	SHUFFLING
 }

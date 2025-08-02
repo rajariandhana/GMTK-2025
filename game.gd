@@ -4,6 +4,7 @@ extends Control
 @onready var trash := $Trash
 @onready var board := $Board
 @onready var hand := $Hand
+@onready var combo: Node = $Combo
 @onready var card_path := preload("res://card.tscn")
 
 @onready var board_pos: Node2D = $BoardPositions
@@ -108,10 +109,12 @@ func state_machine(state):
 		await updraw()
 		return
 		
-	if board.get_child(0).suit == board.get_child(1).suit and board.get_child(0).suit == board.get_child(2).suit:
+	if combo.same_suit(board.get_children()):
+		combo.combo_detector(board.get_children())
 		state = State.TWEENING
 		discard_many(board.get_children())
 		await updraw()
+		
 
 
 func discard_many(cards: Array):

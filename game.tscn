@@ -1,8 +1,9 @@
-[gd_scene load_steps=4 format=3 uid="uid://c3wmjn72rvyyc"]
+[gd_scene load_steps=5 format=3 uid="uid://c3wmjn72rvyyc"]
 
 [ext_resource type="Script" uid="uid://bgb67r0nnh5aj" path="res://game.gd" id="1_e2o6t"]
 [ext_resource type="Texture2D" uid="uid://050sarcoenc7" path="res://GMTK-Board.png" id="2_e2o6t"]
 [ext_resource type="AudioStream" uid="uid://c2sq6g123hrbe" path="res://sfx/success-1.mp3" id="3_feb5d"]
+[ext_resource type="Script" uid="uid://2tdj1201ufmi" path="res://combo.gd" id="4_fc0e3"]
 
 [node name="Game" type="Control"]
 layout_mode = 3
@@ -20,6 +21,16 @@ script = ExtResource("1_e2o6t")
 [node name="Board" type="Node" parent="."]
 
 [node name="Hand" type="Node" parent="."]
+
+[node name="Combo" type="Node" parent="."]
+script = ExtResource("4_fc0e3")
+
+[node name="ComboLabel" type="Label" parent="Combo"]
+offset_left = 843.0
+offset_top = 197.0
+offset_right = 903.0
+offset_bottom = 220.0
+text = "Combo:"
 
 [node name="BG" type="Sprite2D" parent="."]
 z_index = -5
