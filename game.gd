@@ -49,19 +49,27 @@ func generate_cards():
 	var tweens_to_check = []
 	match current_loop:
 		0:
-			for suit in range(2):
-				for value in range(1, 10):
+			for suit in range(1, 3):
+				for value in range(2, 11):
 					tweens_to_check.append(await add_card(suit, value))
 		1:
-			for value in range(1, 10):
-					tweens_to_check.append(await add_card(2, value))
-		2:
-			for suit in range(3):
-				for value in range(10, 14):
-					tweens_to_check.append(await add_card(suit, value))
-		3:
-			for value in range(1, 14):
+			for value in range(2, 11):
 					tweens_to_check.append(await add_card(3, value))
+		2:
+			for value in range(2, 11):
+					tweens_to_check.append(await add_card(4, value))
+		3:
+			for suit in range(1, 4):
+				tweens_to_check.append(await add_card(suit, 11))
+		4:
+			for suit in range(1, 4):
+				tweens_to_check.append(await add_card(suit, 12))
+		5:
+			for suit in range(1, 4):
+				tweens_to_check.append(await add_card(suit, 13))
+		6:
+			for suit in range(1, 4):
+				tweens_to_check.append(await add_card(suit, 14))
 	for t : Tween in tweens_to_check:
 		if t.is_running():
 			await t.finished
@@ -275,6 +283,8 @@ func loop_deck():
 
 func is_dead_end(all_available_cards: Array = []) -> bool:
 	if not all_available_cards:
+		if board.get_child_count() < 3:
+			return false
 		all_available_cards = board.get_children() + hand.get_children()
 		if trash.get_child_count() > 0:
 			all_available_cards.append(trash.get_child(trash.get_child_count() - 1))
