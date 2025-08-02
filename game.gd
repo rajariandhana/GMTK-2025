@@ -17,8 +17,10 @@ var state: int = State.IDLE:
 	set(value):
 		state_machine(value)
 
-var suits = ["","♠️","♥️","♣️","♦️"]
-var current_loop = 1
+
+
+var suits = ["", "♠️", "♥️", "♣️", "♦️"]
+var current_loop = 0
 
 var card_vector2 = Vector2(-50, -75)
 
@@ -31,14 +33,8 @@ var deck_positions := Vector2(70, 70)
 
 
 func _ready() -> void:
-	generate_cards()
-	shuffle_cards()
-	var i=0
-	for card in deck.get_children():
-		#print(card.get_info())
-		card.position = deck_positions + Vector2(0, i)
-		i -= 1
-	deck.get_children().reverse()
+	await generate_cards()
+	state = State.LOOP_ENDED
 		
 	board_positions=[]
 	for pos in board_pos.get_children():
@@ -47,30 +43,40 @@ func _ready() -> void:
 	hand_positions=[]
 	for pos in hand_pos.get_children():
 		hand_positions.append(pos.global_position + card_vector2)
-	await updraw()
+
 
 func generate_cards():
-	var joker_black: Card = card_path.instantiate()
-	deck.add_child(joker_black)
-	joker_black.set_info(Suit.NONE, Rank.JOKER)
-	joker_black.connect("selected", card_selected)
-	joker_black.label_tl.add_theme_color_override("font_color", Color("#1E2749"))
-	joker_black.label_br.add_theme_color_override("font_color", Color("#1E2749"))
-	
-	var joker_red: Card = card_path.instantiate()
-	deck.add_child(joker_red)
-	joker_red.set_info(Suit.NONE, Rank.JOKER)
-	joker_red.connect("selected", card_selected)
-	joker_red.label_tl.add_theme_color_override("font_color", Color("#600724"))
-	joker_red.label_br.add_theme_color_override("font_color", Color("#600724"))
-	
-	for suit in range (1, suits.size()):
-		for rank in range(2, 15):
-			var card_instance : Card = card_path.instantiate()
-			deck.add_child(card_instance)
-			card_instance.set_info(suit, rank)
-			card_instance.connect("selected", card_selected)
-	print(str(deck.get_children().size()) + " cards in deck")
+	var tweens_to_check = []
+	match current_loop:
+		0:
+			for suit in range(2):
+				for value in range(1, 10):
+					tweens_to_check.append(await add_card(suit, value))
+		1:
+			for value in range(1, 10):
+					tweens_to_check.append(await add_card(2, value))
+		2:
+			for suit in range(3):
+				for value in range(10, 14):
+					tweens_to_check.append(await add_card(suit, value))
+		3:
+			for value in range(1, 14):
+					tweens_to_check.append(await add_card(3, value))
+	for t : Tween in tweens_to_check:
+		if t.is_running():
+			await t.finished
+
+
+func add_card(suit, value):
+	var card_instance : Card = card_path.instantiate()
+	trash.add_child(card_instance)
+	card_instance.set_info(suit, value)
+	card_instance.connect("selected", card_selected)
+	card_instance.position = $"Deck-2".position
+	var t : Tween = create_tween()
+	t.tween_property(card_instance, "position", trash_position + Vector2(0, -trash.get_child_count() - 1), 0.8)
+	await get_tree().create_timer(0.03).timeout
+	return t
 
 
 func shuffle_cards():
@@ -82,6 +88,7 @@ func shuffle_cards():
 		deck.add_child(child)
 	if is_dead_end(children.slice(len(children) - 7, len(children))):
 		shuffle_cards()
+		
 
 
 func state_machine(state):
@@ -103,13 +110,14 @@ func state_machine(state):
 		discard_many(hand.get_children())
 		discard_many(board.get_children())
 		
+		await get_tree().create_timer(1).timeout
+		await generate_cards()
 		await get_tree().create_timer(0.5).timeout
 		state = State.LOOP_ENDED
 		state_machine(state)
 		return
 		
 	if board.get_child(0).value == board.get_child(1).value and board.get_child(0).value == board.get_child(2).value:
-		print("test-1")
 		state = State.TWEENING
 		var card_from_deck : Card = null
 		for c in deck.get_children():
@@ -130,10 +138,8 @@ func state_machine(state):
 	var cleans = combo.clean(board_cards)
 	if combo.same_suit(cleans):
 		combo.combo_detector(cleans)
-		state = State.TWEENING
-		discard_many(board_cards)
+		await discard_many(board_cards)
 		await updraw()
-		
 
 
 func discard_many(cards: Array):
