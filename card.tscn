@@ -1,7 +1,7 @@
 [gd_scene load_steps=8 format=3 uid="uid://c3mpu4ff7bw61"]
 
 [ext_resource type="Script" uid="uid://kkji060fqkls" path="res://card.gd" id="1_kikvd"]
-[ext_resource type="Texture2D" uid="uid://brcqkpssrldyl" path="res://CardBack.png" id="2_1i5pp"]
+[ext_resource type="Texture2D" uid="uid://brjxej0xhqna" path="res://CardBack.png" id="2_1i5pp"]
 [ext_resource type="Texture2D" uid="uid://c3s5uyunhf51h" path="res://CardBase.png" id="2_q5obu"]
 [ext_resource type="FontFile" uid="uid://xjcsbs3j5fpo" path="res://fonts/PixelOperator8-Bold.ttf" id="4_1i5pp"]
 [ext_resource type="Texture2D" uid="uid://dtc74taq8f8ww" path="res://Suit_Heart.png" id="5_fpac0"]
@@ -61,6 +61,7 @@ position = Vector2(0, 2)
 texture = ExtResource("5_fpac0")
 
 [node name="Back" type="Sprite2D" parent="Base"]
+visible = false
 z_index = 1
 texture = ExtResource("2_1i5pp")
 
