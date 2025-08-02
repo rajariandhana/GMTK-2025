@@ -47,27 +47,27 @@ position = Vector2(1032, 503)
 [node name="BoardPositions" type="Node2D" parent="."]
 
 [node name="Board-1" type="Node2D" parent="BoardPositions"]
-position = Vector2(736, 276)
+position = Vector2(734, 276)
 
 [node name="Board-2" type="Node2D" parent="BoardPositions"]
-position = Vector2(576, 276)
+position = Vector2(574, 276)
 
 [node name="Board-3" type="Node2D" parent="BoardPositions"]
-position = Vector2(416, 276)
+position = Vector2(414, 276)
 
 [node name="HandPositions" type="Node2D" parent="."]
 
 [node name="Hand-1" type="Node2D" parent="HandPositions"]
-position = Vector2(336, 503)
+position = Vector2(334, 503)
 
 [node name="Hand-2" type="Node2D" parent="HandPositions"]
-position = Vector2(496, 503)
+position = Vector2(494, 503)
 
 [node name="Hand-3" type="Node2D" parent="HandPositions"]
-position = Vector2(656, 503)
+position = Vector2(654, 503)
 
 [node name="Hand-4" type="Node2D" parent="HandPositions"]
-position = Vector2(816, 503)
+position = Vector2(814, 503)
 
 [node name="SFX_Discard" type="AudioStreamPlayer2D" parent="."]
 stream = ExtResource("4_ryrav")
@@ -82,8 +82,23 @@ grow_horizontal = 2
 grow_vertical = 2
 theme_override_colors/font_color = Color(0, 0, 0, 0.168627)
 theme_override_font_sizes/font_size = 128
-text = "LOOP 1"
+text = "LOOP 0"
 horizontal_alignment = 2
+
+[node name="DeadEndLabel" type="Label" parent="."]
+visible = false
+z_index = 1
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0, 0, 0, 0.168627)
+theme_override_font_sizes/font_size = 196
+text = "DEAD END"
+horizontal_alignment = 2
+vertical_alignment = 1
 
 [node name="Discarded" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("4_ryrav")

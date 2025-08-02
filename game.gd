@@ -19,7 +19,7 @@ var state: int = State.IDLE:
 
 
 
-var suits = ["♥️", "♣️"]#, "♦️", "♠️"]
+var suits = ["♥️", "♣️", "♦️", "♠️"]
 var current_loop = 1
 
 var card_vector2 = Vector2(-50, -75)
@@ -73,21 +73,21 @@ func shuffle_cards():
 
 func state_machine(state):
 	if state == State.LOOP_ENDED:
-		print('hey')
 		state_label.text = ""
 		state = State.SHUFFLING
 		await loop_deck()
 		current_loop += 1
-	if state == State.DEAD_END:
-		state_label.text = "DEAD END"
-		return
 	if state == State.SHUFFLE_FINISHED:
 		await updraw()
+	if state == State.DEAD_END:
+		$DeadEndLabel.visible = true
+		return
 	if state != State.IDLE:
 		return
 		
 	state_label.text = "LOOP " + str(current_loop)
 	if board.get_child_count() < 3 and deck.get_child_count() == 0:
+		print('yay')
 		discard_many(hand.get_children())
 		discard_many(board.get_children())
 		
@@ -105,7 +105,8 @@ func state_machine(state):
 				deck.remove_child(card_from_deck)
 				board.add_child(card_from_deck)
 				var t : Tween = create_tween()
-				t.tween_property(card_from_deck, "position", get_viewport_rect().size / 2 + Vector2(-370, -100), 0.7)
+				card_from_deck.flip()
+				t.tween_property(card_from_deck, "position", get_viewport_rect().size / 2 + Vector2(-370, -100), 0.8)
 				await t.finished
 				break
 		await discard_many(board.get_children())
@@ -255,7 +256,9 @@ func is_dead_end(all_available_cards: Array = []) -> bool:
 		all_available_cards = board.get_children() + hand.get_children()
 		if trash.get_child_count() > 0:
 			all_available_cards.append(trash.get_child(trash.get_child_count() - 1))
-		
+	
+	if len(all_available_cards) < 6:
+		return false
 	var suit_counts := {}
 	for card in all_available_cards:
 		var suit = card.suit

@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3 uid="uid://c3mpu4ff7bw61"]
+[gd_scene load_steps=8 format=3 uid="uid://c3mpu4ff7bw61"]
 
 [ext_resource type="Script" uid="uid://kkji060fqkls" path="res://card.gd" id="1_kikvd"]
 [ext_resource type="Texture2D" uid="uid://brjxej0xhqna" path="res://CardBack.png" id="2_1i5pp"]
@@ -6,6 +6,8 @@
 [ext_resource type="FontFile" uid="uid://xjcsbs3j5fpo" path="res://fonts/PixelOperator8-Bold.ttf" id="4_1i5pp"]
 [ext_resource type="Texture2D" uid="uid://dtc74taq8f8ww" path="res://Suit_Heart.png" id="5_fpac0"]
 [ext_resource type="AudioStream" uid="uid://cstoqmf0fi80y" path="res://sfx/card_click.mp3" id="6_1i5pp"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_1i5pp"]
 
 [node name="Card" type="Button"]
 anchors_preset = -1
@@ -15,6 +17,7 @@ offset_right = 0.167992
 offset_bottom = 0.311996
 grow_vertical = 2
 theme_override_font_sizes/font_size = 64
+theme_override_styles/normal = SubResource("StyleBoxEmpty_1i5pp")
 text = "♠️
 "
 script = ExtResource("1_kikvd")
