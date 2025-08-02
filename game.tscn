@@ -46,13 +46,13 @@ position = Vector2(1032, 503)
 [node name="BoardPositions" type="Node2D" parent="."]
 
 [node name="Board-1" type="Node2D" parent="BoardPositions"]
-position = Vector2(416, 276)
+position = Vector2(736, 276)
 
 [node name="Board-2" type="Node2D" parent="BoardPositions"]
 position = Vector2(576, 276)
 
 [node name="Board-3" type="Node2D" parent="BoardPositions"]
-position = Vector2(736, 276)
+position = Vector2(416, 276)
 
 [node name="HandPositions" type="Node2D" parent="."]
 

@@ -67,9 +67,20 @@ func shuffle_cards():
 		deck.remove_child(child)
 	for child in children:
 		deck.add_child(child)
+	if is_dead_end(children.slice(len(children) - 7, len(children))):
+		shuffle_cards()
 
 
 func state_machine(state):
+	state_label.text = "LOOP " + str(current_loop)
+	if board.get_child_count() < 3 and deck.get_child_count() == 0:
+		discard_many(hand.get_children())
+		discard_many(board.get_children())
+		
+		await get_tree().create_timer(0.5).timeout
+		state = State.LOOP_ENDED
+		state_machine(state)
+		return
 	if state == State.DEAD_END:
 		state_label.text = "DEAD END"
 		return
@@ -81,16 +92,6 @@ func state_machine(state):
 		await updraw()
 		
 	if state != State.IDLE:
-		return
-	
-	state_label.text = "LOOP " + str(current_loop)
-	if board.get_child_count() < 3 and deck.get_child_count() == 0:
-		discard_many(hand.get_children())
-		discard_many(board.get_children())
-		
-		await get_tree().create_timer(0.5).timeout
-		state = State.LOOP_ENDED
-		state_machine(state)
 		return
 		
 	if board.get_child(0).value == board.get_child(1).value and board.get_child(0).value == board.get_child(2).value:
@@ -151,8 +152,10 @@ func updraw():
 		if deck.get_child_count() == 0:
 			break
 		var t : Tween = create_tween()
+		t.set_ease(Tween.EASE_IN_OUT)
 		tweens_to_check.append(t)
 		var card = deck.get_child(-1)
+		card.flip()
 		card.text = suits[card.suit]
 		deck.remove_child(card)
 		board.add_child(card)
@@ -163,8 +166,10 @@ func updraw():
 		if deck.get_child_count() == 0:
 			break
 		var t : Tween = create_tween()
+		t.set_ease(Tween.EASE_IN_OUT)
 		tweens_to_check.append(t)
 		var card = deck.get_child(-1)
+		card.flip()
 		card.text = suits[card.suit]
 		deck.remove_child(card)
 		hand.add_child(card)
@@ -206,6 +211,9 @@ func card_selected(card: Card):
 	selected_card = null
 	await t.finished
 	await t2.finished
+	if is_dead_end():
+		state = State.DEAD_END
+		return
 	state = State.IDLE
 
 
@@ -232,12 +240,11 @@ func loop_deck():
 	state = State.SHUFFLE_FINISHED
 
 
-func is_dead_end() -> bool:
-	if not board.get_children():
-		return false
-	var all_available_cards: Array = board.get_children() + hand.get_children()
-	if trash.get_child_count() > 0:
-		all_available_cards.append(trash.get_child(trash.get_child_count() - 1))
+func is_dead_end(all_available_cards: Array = []) -> bool:
+	if not all_available_cards:
+		all_available_cards = board.get_children() + hand.get_children()
+		if trash.get_child_count() > 0:
+			all_available_cards.append(trash.get_child(trash.get_child_count() - 1))
 		
 	var suit_counts := {}
 	for card in all_available_cards:

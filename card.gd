@@ -9,9 +9,10 @@ signal selected(card:Card)
 @export var rank : int = Rank.NUMBER
 @export var suit : int = Suit.HEARTS
 
-@onready var label_tl: Label = $Label_TL
-@onready var label_br: Label = $Label_BR
-@onready var suit_icon: Sprite2D = $SuitIcon
+@onready var label_tl: Label = $Base/Label_TL
+@onready var label_br: Label = $Base/Label_BR
+@onready var suit_icon: Sprite2D = $Base/SuitIcon
+@onready var back : Sprite2D = $Base/Back
 
 var suits = ["♥️", "♣️", "♦️", "♠️"]
 
@@ -24,10 +25,12 @@ var suit_icons := {
 	Suit.SPADES: preload("res://Suit_Spade.png"),
 }
 
+
 func _ready() -> void:
 	pass
 	#print(has_node("Label"))
 	#print(label.text)
+
 
 func set_info(s: int, v: int) -> void:
 	self.suit = s
@@ -68,6 +71,16 @@ func _on_button_up() -> void:
 	selected.emit(self)
 	sfx_click.play()
 
+
+func flip() -> void:
+	var t := create_tween()
+	t.tween_property($Base, "scale", Vector2(0, scale.y), 0.3)
+	await t.finished
+	back.visible = not back.visible
+	var t2 := create_tween()
+	t2.tween_property($Base, "scale", Vector2(1, scale.y), 0.3)
+
+
 func get_value() -> String:
 	match value:
 		#0: return "JOKER"
@@ -76,7 +89,8 @@ func get_value() -> String:
 		12: return "QUEEN"
 		13: return "KING"
 	return str(value)
-	
+
+
 func get_suit() -> String:
 	match suit:
 		0: return "HEARTS"
@@ -84,6 +98,7 @@ func get_suit() -> String:
 		2: return "DIAMONDS"
 		3: return "SPADES"
 	return ""
-		
+
+
 func get_info() -> String:
 	return get_value() + " of " + get_suit()
