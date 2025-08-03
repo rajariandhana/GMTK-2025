@@ -72,6 +72,7 @@ func generate_cards():
 		7:
 			for suit in range(1, 4):
 				tweens_to_check.append(await add_card(suit, 14))
+		# TODO: add joker?
 	for t : Tween in tweens_to_check:
 		if t.is_running():
 			await t.finished
@@ -98,6 +99,7 @@ func shuffle_cards():
 		deck.add_child(child)
 	if is_dead_end(children.slice(len(children) - 7, len(children))):
 		shuffle_cards()
+	#print("Deck contains: "+str(deck.get_child_count()) + " cards.")
 		
 
 
@@ -196,7 +198,7 @@ func updraw():
 		tweens_to_check.append(t)
 		var card = deck.get_child(-1)
 		card.flip()
-		card.text = suits[card.suit]
+		#card.text = suits[card.suit]
 		deck.remove_child(card)
 		board.add_child(card)
 		t.tween_property(card, "position", board_positions[i], 0.4)
@@ -210,7 +212,7 @@ func updraw():
 		tweens_to_check.append(t)
 		var card = deck.get_child(-1)
 		card.flip()
-		card.text = suits[card.suit]
+		#card.text = suits[card.suit]
 		deck.remove_child(card)
 		hand.add_child(card)
 		t.tween_property(card, "position", hand_positions[i], 0.4)

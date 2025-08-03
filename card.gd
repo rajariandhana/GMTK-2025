@@ -19,7 +19,7 @@ var suits = ["","♠️","♥️","♣️","♦️"]
 @onready var sfx_click: AudioStreamPlayer = $"SFX_Click"
 
 var suit_icons := {
-	0: preload("res://Rank_Joker.png"),
+	0: preload("res://JokerHat.png"),
 	Suit.SPADES: preload("res://Suit_Spade.png"),
 	Suit.HEARTS: preload("res://Suit_Heart.png"),
 	Suit.CLUBS: preload("res://Suit_Club.png"),
@@ -63,6 +63,10 @@ func set_info(suit: int, rank: int) -> void:
 	elif self.suit == Suit.HEARTS || self.suit == Suit.DIAMONDS:
 		label_tl.add_theme_color_override("font_color", Color("#600724"))
 		label_br.add_theme_color_override("font_color", Color("#600724"))
+	else: #JOKER
+		label_tl.add_theme_color_override("font_color", Color("#600724"))
+		label_br.add_theme_color_override("font_color", Color("#1E2749"))
+	text = ""
 
 
 func _on_button_up() -> void:

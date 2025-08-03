@@ -19,13 +19,13 @@ func clean(cards: Array) -> Array:
 	#print("jokers: "+str(jokers_ctr)+" | "+get_infos(cleans))
 	return cleans
 
+# functions below: cards must already be cleaned, free of joker
 func same_suit(cards: Array) -> bool:
 	for i in range(cards.size()-1):
 		if cards[i].suit != cards[i+1].suit:
 			return false
 	return true
 
-# @requires cards must be 3 of same suit since will only be called when discarding 3
 func combo_detector(cards: Array):
 	if (combo_royals(cards)):
 		combo_label.text = "Combo: ROYALS!"
@@ -35,14 +35,10 @@ func combo_detector(cards: Array):
 	combo_label.text = "Combo:"
 
 func combo_royals(cards: Array) -> bool:
-	#print("size: "+str(cards.size()))
-	#return true
 	for card in cards:
-		if card.rank == Rank.JOKER:
-			pass
-		elif Rank.TWO <= card.rank && card.rank <= Rank.TEN:
+		if Rank.TWO <= card.rank && card.rank <= Rank.TEN:
 			return false
-	print("royals")
+	#print("royals")
 	return true
 
 func combo_straight(cards: Array) -> bool:
@@ -51,7 +47,7 @@ func combo_straight(cards: Array) -> bool:
 		return a.value < b.value
 	)
 	for i in range(temp.size()-1):
-		if temp[i].value != temp[i+1].value-1:
+		if temp[i].rank >= Rank.TEN || temp[i].value != temp[i+1].value-1:
 			return false
-	print("straight")
+	#print("straight")
 	return true

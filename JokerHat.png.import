@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://q8olvk7vemha"
-path="res://.godot/imported/CardBack.png-318cca0819ae33667597126738280a2f.ctex"
+uid="uid://0iiwjw7uy2k0"
+path="res://.godot/imported/JokerHat.png-2939046f34e3f72fbe77c7ea2d55d1e4.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://CardBack.png"
-dest_files=["res://.godot/imported/CardBack.png-318cca0819ae33667597126738280a2f.ctex"]
+source_file="res://JokerHat.png"
+dest_files=["res://.godot/imported/JokerHat.png-2939046f34e3f72fbe77c7ea2d55d1e4.ctex"]
 
 [params]
 
