@@ -12,12 +12,13 @@ extends Control
 @onready var state_label: Label = $StatusLabel
 @onready var sfx_discard: AudioStreamPlayer = $Discarded
 
+#@onready var pause_menu: Control = $CanvasLayer/PauseMenu
+@onready var pause_panel: Panel = $CanvasLayer/PausePanel
+
 var selected_card : Card
 var state: int = State.IDLE:
 	set(value):
 		state_machine(value)
-
-
 
 var suits = ["", "♠️", "♥️", "♣️", "♦️"]
 var current_loop = 0
@@ -31,7 +32,6 @@ var hand_positions := []
 var trash_position := Vector2(982, 428)
 var deck_positions := Vector2(70, 70)
 
-
 func _ready() -> void:
 	await generate_cards()
 	state = State.LOOP_ENDED
@@ -44,6 +44,8 @@ func _ready() -> void:
 	for pos in hand_pos.get_children():
 		hand_positions.append(pos.global_position + card_vector2)
 
+#func _process()->void:
+	
 
 func generate_cards():
 	var tweens_to_check = []
@@ -322,3 +324,8 @@ func is_dead_end(all_available_cards: Array = []) -> bool:
 		else:
 			dead_end = true
 	return dead_end 
+
+
+func _on_pause_button_pressed() -> void:
+	#print("PauseButton")
+	pause_panel.pause()
