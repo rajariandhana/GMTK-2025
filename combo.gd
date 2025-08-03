@@ -1,6 +1,7 @@
 extends Node
 
 @onready var combo_label: Label = $ComboLabel
+@onready var score: Control = $"../CanvasLayer/Score"
 	
 func get_infos(cards: Array) -> String:
 	var res=""
@@ -29,8 +30,12 @@ func same_suit(cards: Array) -> bool:
 func combo_detector(cards: Array):
 	if (combo_royals(cards)):
 		combo_label.text = "Combo: ROYALS!"
+		score.add_score(100)
 	elif (combo_straight(cards)):
 		combo_label.text = "Combo: STRAIGHT!"
+		score.add_score(60)
+	else:
+		score.add_score(30)
 	await get_tree().create_timer(2.0).timeout
 	combo_label.text = "Combo:"
 

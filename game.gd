@@ -5,6 +5,7 @@ extends Control
 @onready var board := $Board
 @onready var hand := $Hand
 @onready var combo: Node = $Combo
+@onready var score: Control = $CanvasLayer/Score
 @onready var card_path := preload("res://card.tscn")
 
 @onready var board_pos: Node2D = $BoardPositions
@@ -33,6 +34,7 @@ var trash_position := Vector2(982, 428)
 var deck_positions := Vector2(70, 70)
 
 func _ready() -> void:
+	score.reset_score()
 	await generate_cards()
 	state = State.LOOP_ENDED
 		

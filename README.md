@@ -9,3 +9,7 @@ combos:
 		- KQJ
 show cards that has been discarded? easier track what combos can still be done
 are players supposed to be able to swap with top of trash?
+
+basic: 30
+straight: 60
+royals: 100
