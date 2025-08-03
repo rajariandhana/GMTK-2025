@@ -1,7 +1,7 @@
 [gd_scene load_steps=18 format=3 uid="uid://c3wmjn72rvyyc"]
 
 [ext_resource type="Script" uid="uid://bgb67r0nnh5aj" path="res://game.gd" id="1_e2o6t"]
-[ext_resource type="Texture2D" uid="uid://ccvy1pl5c8bhq" path="res://Table.png" id="3_fc0e3"]
+[ext_resource type="Texture2D" uid="uid://bid0uw43gk18" path="res://Background.png" id="3_80cx4"]
 [ext_resource type="Texture2D" uid="uid://c5ug1hdq5dc6j" path="res://Logo.png" id="4_215e1"]
 [ext_resource type="Script" uid="uid://2tdj1201ufmi" path="res://combo.gd" id="4_fc0e3"]
 [ext_resource type="AudioStream" uid="uid://bci7wo8cwrtvx" path="res://sfx/discarded.mp3" id="4_ryrav"]
@@ -62,7 +62,7 @@ text = "Combo:"
 [node name="BG" type="Sprite2D" parent="."]
 z_index = -5
 position = Vector2(576, 324)
-texture = ExtResource("3_fc0e3")
+texture = ExtResource("3_80cx4")
 
 [node name="Logo" type="Sprite2D" parent="."]
 position = Vector2(168, 535)
@@ -105,19 +105,6 @@ position = Vector2(814, 503)
 [node name="SFX_Discard" type="AudioStreamPlayer2D" parent="."]
 stream = ExtResource("4_ryrav")
 
-[node name="StatusLabel" type="Label" parent="."]
-z_index = -1
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-theme_override_colors/font_color = Color(0, 0, 0, 0.168627)
-theme_override_font_sizes/font_size = 128
-text = "LOOP 0"
-horizontal_alignment = 2
-
 [node name="DeadEndLabel" type="Label" parent="."]
 visible = false
 z_index = 1
@@ -145,10 +132,10 @@ bus = &"SFX"
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 
 [node name="PauseButton" type="Button" parent="CanvasLayer"]
-offset_left = 1010.0
-offset_top = 81.0
-offset_right = 1073.0
-offset_bottom = 144.0
+offset_left = 1027.0
+offset_top = 62.0
+offset_right = 1090.0
+offset_bottom = 125.0
 action_mode = 0
 icon = ExtResource("6_j5wjh")
 flat = true
@@ -191,6 +178,18 @@ theme_override_colors/font_color = Color(1, 0.843137, 0, 1)
 theme_override_fonts/font = ExtResource("11_lc2xo")
 theme_override_font_sizes/font_size = 32
 text = "$"
+vertical_alignment = 1
+
+[node name="StateLabel" type="Label" parent="CanvasLayer/Score"]
+layout_mode = 0
+offset_left = 70.0
+offset_top = 247.0
+offset_right = 293.0
+offset_bottom = 281.0
+theme_override_colors/font_color = Color(1, 0.843137, 0, 1)
+theme_override_fonts/font = ExtResource("8_vef74")
+theme_override_font_sizes/font_size = 24
+text = "LOOP: ?"
 vertical_alignment = 1
 
 [node name="ScoreText" type="Label" parent="CanvasLayer/Score"]

@@ -10,7 +10,9 @@ extends Control
 
 @onready var board_pos: Node2D = $BoardPositions
 @onready var hand_pos: Node2D = $HandPositions
-@onready var state_label: Label = $StatusLabel
+#@onready var state_label: Label = $StatusLabel
+@onready var state_label: Label = $CanvasLayer/Score/StateLabel
+
 @onready var sfx_discard: AudioStreamPlayer = $Discarded
 
 #@onready var pause_menu: Control = $CanvasLayer/PauseMenu
@@ -121,7 +123,7 @@ func state_machine(state):
 	if state != State.IDLE:
 		return
 		
-	state_label.text = "LOOP " + str(current_loop)
+	state_label.text = "LOOP: " + str(current_loop)
 	if board.get_child_count() < 3 and deck.get_child_count() == 0:
 		discard_many(hand.get_children())
 		discard_many(board.get_children())
