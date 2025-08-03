@@ -1,15 +1,15 @@
-# GMTK-2025
+# QQ Joker
+Loop your way to achieve higher score and leave with $$$.
 
-### bug list:
+### How to play (written here since we don't have time to write it in game):
+You are given 3 cards on board and 4 on your hand. You can swap cards between board and hand. When all 3 cards on board matches their suit, they are discarded. Each level spawns new cards until all four suit appears, boss cards, face cards, even joker.
 
-### ideas:
-combos:
-	higher scores if combo detected when discarding:
-		- straight numbers: (2,3,4), (3,4,5), ..., (8,9,10), no need to be in order just straight on board
-		- KQJ
-show cards that has been discarded? easier track what combos can still be done
-are players supposed to be able to swap with top of trash?
+### Combos
+You can achieve a higher score by matching certain cards
+- no combo: just same suit +30
+- $TRAIGHT: straight numbers +60
+- ROYAL$: King, Queen, Jack +100
+*they don't have to be in order, board just consists a combination of them.
 
-basic: 30
-straight: 60
-royals: 100
+### Jokers
+Joker is a wild card. You can use it to pair with anything. 
