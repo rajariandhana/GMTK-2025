@@ -10,12 +10,11 @@ extends Control
 
 @onready var board_pos: Node2D = $BoardPositions
 @onready var hand_pos: Node2D = $HandPositions
-#@onready var state_label: Label = $StatusLabel
 @onready var state_label: Label = $CanvasLayer/Score/StateLabel
+@onready var card_counter: Label = $CanvasLayer/Score/CardCounter
 
 @onready var sfx_discard: AudioStreamPlayer = $Discarded
 
-#@onready var pause_menu: Control = $CanvasLayer/PauseMenu
 @onready var pause_panel: Panel = $CanvasLayer/PausePanel
 
 var selected_card : Card
@@ -105,6 +104,7 @@ func shuffle_cards():
 		deck.add_child(child)
 	if is_dead_end(children.slice(len(children) - 7, len(children))):
 		shuffle_cards()
+	card_counter.text = "CARDS: "+str(deck.get_child_count())
 	#print("Deck contains: "+str(deck.get_child_count()) + " cards.")
 		
 
@@ -118,7 +118,8 @@ func state_machine(state):
 	if state == State.SHUFFLE_FINISHED:
 		await updraw()
 	if state == State.DEAD_END:
-		$DeadEndLabel.visible = true
+		#$DeadEndLabel.visible =score
+		score.endgame()
 		return
 	if state != State.IDLE:
 		return

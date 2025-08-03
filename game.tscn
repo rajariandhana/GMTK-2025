@@ -131,6 +131,11 @@ bus = &"SFX"
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 
+[node name="InvisibleLayer" type="ColorRect" parent="CanvasLayer"]
+offset_right = 1152.0
+offset_bottom = 648.0
+color = Color(1, 1, 1, 0)
+
 [node name="PauseButton" type="Button" parent="CanvasLayer"]
 offset_left = 1027.0
 offset_top = 62.0
@@ -190,6 +195,30 @@ theme_override_colors/font_color = Color(1, 0.843137, 0, 1)
 theme_override_fonts/font = ExtResource("8_vef74")
 theme_override_font_sizes/font_size = 24
 text = "LOOP: ?"
+vertical_alignment = 1
+
+[node name="CardCounter" type="Label" parent="CanvasLayer/Score"]
+layout_mode = 0
+offset_left = 70.0
+offset_top = 289.0
+offset_right = 293.0
+offset_bottom = 323.0
+theme_override_colors/font_color = Color(1, 0.843137, 0, 1)
+theme_override_fonts/font = ExtResource("8_vef74")
+theme_override_font_sizes/font_size = 24
+text = "CARDS: "
+vertical_alignment = 1
+
+[node name="FinalScore" type="Label" parent="CanvasLayer/Score"]
+layout_mode = 0
+offset_left = 70.0
+offset_top = 333.0
+offset_right = 293.0
+offset_bottom = 367.0
+theme_override_colors/font_color = Color(1, 0.843137, 0, 1)
+theme_override_fonts/font = ExtResource("8_vef74")
+theme_override_font_sizes/font_size = 24
+text = "SCORE: "
 vertical_alignment = 1
 
 [node name="ScoreText" type="Label" parent="CanvasLayer/Score"]
