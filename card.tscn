@@ -5,7 +5,7 @@
 [ext_resource type="Texture2D" uid="uid://c3s5uyunhf51h" path="res://CardBase.png" id="2_q5obu"]
 [ext_resource type="FontFile" uid="uid://xjcsbs3j5fpo" path="res://fonts/PixelOperator8-Bold.ttf" id="4_1i5pp"]
 [ext_resource type="Texture2D" uid="uid://dtc74taq8f8ww" path="res://Suit_Heart.png" id="5_fpac0"]
-[ext_resource type="AudioStream" uid="uid://cstoqmf0fi80y" path="res://sfx/card_click.mp3" id="6_1i5pp"]
+[ext_resource type="AudioStream" uid="uid://csd2okwm0druj" path="res://sfx/click.ogg" id="6_1i5pp"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_1i5pp"]
 
@@ -67,6 +67,6 @@ texture = ExtResource("2_1i5pp")
 
 [node name="SFX_Click" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("6_1i5pp")
-volume_db = -5.0
+volume_db = 5.0
 
 [connection signal="button_up" from="." to="." method="_on_button_up"]

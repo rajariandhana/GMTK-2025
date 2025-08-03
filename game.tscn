@@ -1,12 +1,13 @@
-[gd_scene load_steps=17 format=3 uid="uid://c3wmjn72rvyyc"]
+[gd_scene load_steps=18 format=3 uid="uid://c3wmjn72rvyyc"]
 
 [ext_resource type="Script" uid="uid://bgb67r0nnh5aj" path="res://game.gd" id="1_e2o6t"]
 [ext_resource type="Texture2D" uid="uid://ccvy1pl5c8bhq" path="res://Table.png" id="3_fc0e3"]
 [ext_resource type="Texture2D" uid="uid://c5ug1hdq5dc6j" path="res://Logo.png" id="4_215e1"]
 [ext_resource type="Script" uid="uid://2tdj1201ufmi" path="res://combo.gd" id="4_fc0e3"]
 [ext_resource type="AudioStream" uid="uid://bci7wo8cwrtvx" path="res://sfx/discarded.mp3" id="4_ryrav"]
+[ext_resource type="AudioStream" uid="uid://ccytem5c7qvm2" path="res://sfx/Pattern 9_2.wav" id="6_80cx4"]
 [ext_resource type="Texture2D" uid="uid://ltmmxysxndfw" path="res://PauseButton.png" id="6_j5wjh"]
-[ext_resource type="AudioStream" uid="uid://cnlur4wlpridl" path="res://sfx/shuffle-cards.mp3" id="6_ryrav"]
+[ext_resource type="AudioStream" uid="uid://cpgcepov2765f" path="res://sfx/Shuffle2.2.ogg" id="7_80cx4"]
 [ext_resource type="Script" uid="uid://ufqljkn377l8" path="res://pause_panel.gd" id="7_eow3j"]
 [ext_resource type="AudioStream" uid="uid://dg5rguxd4vlmf" path="res://sfx/click-1.mp3" id="8_j5wjh"]
 [ext_resource type="FontFile" uid="uid://by3jvrxmonp55" path="res://fonts/PixelOperator8.ttf" id="8_vef74"]
@@ -51,6 +52,7 @@ script = ExtResource("1_e2o6t")
 script = ExtResource("4_fc0e3")
 
 [node name="ComboLabel" type="Label" parent="Combo"]
+visible = false
 offset_left = 843.0
 offset_top = 197.0
 offset_right = 903.0
@@ -132,12 +134,13 @@ horizontal_alignment = 2
 vertical_alignment = 1
 
 [node name="Discarded" type="AudioStreamPlayer" parent="."]
-stream = ExtResource("4_ryrav")
-volume_db = -5.0
+stream = ExtResource("6_80cx4")
+volume_db = 5.0
 
 [node name="DeckLooped" type="AudioStreamPlayer" parent="."]
-stream = ExtResource("6_ryrav")
-volume_db = -5.0
+stream = ExtResource("7_80cx4")
+volume_db = 5.0
+bus = &"SFX"
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 
@@ -164,7 +167,22 @@ sprite_frames = SubResource("SpriteFrames_80cx4")
 autoplay = "default"
 frame_progress = 0.572028
 
+[node name="Message" type="Label" parent="CanvasLayer/Score"]
+visible = false
+layout_mode = 0
+offset_left = 465.0
+offset_top = 104.0
+offset_right = 688.0
+offset_bottom = 136.0
+theme_override_colors/font_color = Color(1, 0.843137, 0, 1)
+theme_override_fonts/font = ExtResource("11_lc2xo")
+theme_override_font_sizes/font_size = 24
+text = "$TRAIGHT"
+horizontal_alignment = 1
+vertical_alignment = 1
+
 [node name="Dollar" type="Label" parent="CanvasLayer/Score"]
+layout_mode = 0
 offset_left = 465.0
 offset_top = 104.0
 offset_right = 688.0
@@ -176,6 +194,7 @@ text = "$"
 vertical_alignment = 1
 
 [node name="ScoreText" type="Label" parent="CanvasLayer/Score"]
+layout_mode = 0
 offset_left = 465.0
 offset_top = 104.0
 offset_right = 688.0
@@ -183,12 +202,11 @@ offset_bottom = 136.0
 theme_override_colors/font_color = Color(1, 0.843137, 0, 1)
 theme_override_fonts/font = ExtResource("11_lc2xo")
 theme_override_font_sizes/font_size = 32
-text = "100"
+text = "0"
 horizontal_alignment = 2
 vertical_alignment = 1
 
 [node name="Timer" type="Timer" parent="CanvasLayer/Score"]
-wait_time = 0.5
 
 [node name="PausePanel" type="Panel" parent="CanvasLayer"]
 process_mode = 3
